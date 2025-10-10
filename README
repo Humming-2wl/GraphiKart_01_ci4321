@@ -1,1 +1,20 @@
-hello
+Grupo:
+  "El Nido del Buho"
+
+Integrantes:
+  - Isaac Liendo
+
+Nombre del juego:
+  "GraphiKart"
+
+Intrucciones:
+  Para correr el juego:
+    - Clonar el repositorio
+    - Instalar nodejs y npm
+      - Pasos para Debian 12 --> https://reintech.io/blog/installing-nodejs-npm-debian-12)
+      - Pasos en general (Option 1) --> https://threejs.org/manual/#en/installation
+    - Instalar three y vite con los comandos especificados en el link de arriba en la carpeta del juego
+    - Ejecutar "npx vite"
+    - Copiar el enlace mostrado en la terminal e ir al navegador para abrirlo
+  De las mecánicas del juego:
+    - por escribir
