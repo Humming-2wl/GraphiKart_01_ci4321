@@ -226,6 +226,7 @@ export const kart_mesh_index = {
   POWUP1: 5, // triple projectile
   POWUP2: 6, // single bomb
   POWUP3: 7, // mushroom
+  POWUP4: 8, // triple mushroom
 }
 
 export function build_kart(scene) {
@@ -289,15 +290,15 @@ export function build_kart(scene) {
   // shell 1
   temp = new three.Object3D(); temp.name = "shell 1 container"; container.add(temp)
   temp.position.y = -2.5; temp.position.z = 0.7; 
-  mesh = powerup_funcs.build_single_projectile(); mesh.name = "shell 1 mesh"; temp.add(mesh)
+  mesh = powerup_funcs.build_single_projectile(); temp.add(mesh)
   // shell 2
   temp = new three.Object3D(); temp.name = "shell 2 container"; container.add(temp)
   temp.position.x = -2.165; temp.position.y = 1.25; temp.position.z = 0.7; temp.rotation.z = - 2 * Math.PI / 3
-  mesh = powerup_funcs.build_single_projectile(); mesh.name = "shell 2 mesh"; temp.add(mesh)
+  mesh = powerup_funcs.build_single_projectile(); temp.add(mesh)
   // shell 3
   temp = new three.Object3D(); temp.name = "shell 3 container"; container.add(temp)
   temp.position.x = 2.165; temp.position.y = 1.25; temp.position.z = 0.7; temp.rotation.z = 2 * Math.PI / 3
-  mesh = powerup_funcs.build_single_projectile(); mesh.name = "shell 3 mesh"; temp.add(mesh)
+  mesh = powerup_funcs.build_single_projectile(); temp.add(mesh)
   
   // "bomb"
   mesh = powerup_funcs.build_bomb_projectile()
@@ -310,6 +311,24 @@ export function build_kart(scene) {
   mesh.position.y = -2.5; mesh.position.z = 0.5;  mesh.rotation.z = Math.PI / 2; 
   mesh.visible = false
   kart.add(mesh)
+  
+  // "triple mushroom"
+  container = new three.Object3D(); container.name = "triple speedup container"; kart.add(container)
+  container.position.y = -0.9; container.visible = false
+  // mushrrom 1
+  temp = new three.Object3D(); temp.name = "speedup 1 container"; container.add(temp)
+  temp.position.y = -2.5; temp.position.z = 0.7; temp.rotation.z = Math.PI / 2
+  mesh = powerup_funcs.build_speedup_power(); temp.add(mesh)
+  // mushrrom 2
+  temp = new three.Object3D(); temp.name = "speedup 2 container"; container.add(temp)
+  temp.position.x = -2.165; temp.position.y = 1.25; temp.position.z = 0.7
+  temp.rotation.z = (- 2 * Math.PI / 3) + (Math.PI / 2)
+  mesh = powerup_funcs.build_speedup_power(); temp.add(mesh);
+  // mushrrom 3
+  temp = new three.Object3D(); temp.name = "speedup 3 container"; container.add(temp)
+  temp.position.x = 2.165; temp.position.y = 1.25; temp.position.z = 0.7
+  temp.rotation.z = (2 * Math.PI / 3) + (Math.PI / 2)
+  mesh = powerup_funcs.build_speedup_power(); temp.add(mesh);
   
   // done!
   kart.userData["powerup_active"] = 0
@@ -358,7 +377,7 @@ export function update_velocity(action_num) {
       if (last_velocity < max_velocity)
         last_velocity += velocity_dif
       else
-        last_velocity -= 1
+        last_velocity -= 0.01
   }
   else if (action_num == actions.BACKWARDS) {
     if (last_velocity > 0) last_velocity -= 5 * velocity_dif

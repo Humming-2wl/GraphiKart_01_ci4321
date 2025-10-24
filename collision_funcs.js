@@ -140,8 +140,7 @@ export function update_kart_given_collision(kart, obj)
   // set the velocity to be opposite by a smaller amount
   // and substract the last position increment (the double of it)
   if (obj.userData["collision_type"] == type.STOP_CAR
-      || obj.userData["collision_type"] == type.DAMAGE_CAR
-      || obj.userData["collision_type"] == type.PROJECTILE)
+      || obj.userData["collision_type"] == type.DAMAGE_CAR)
   {
     kart.position.x -= 2 * kart_funcs.vec_pos_inc.x;
     kart.position.y -= 2 * kart_funcs.vec_pos_inc.y;

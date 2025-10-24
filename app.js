@@ -124,13 +124,20 @@ function update_kart()
       kart.userData["powerup_uses_left"] = 0
     } else {    
       let obj
-      if (kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP1)
+      if (kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP1) {
         obj = powerup_funcs.build_single_projectile_throw(kart)
-      else if (kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP2)
+        scene.add(obj)
+      }
+      else if (kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP2) {
         obj = powerup_funcs.build_bomb_projectile_throw(kart)
-      else if (kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP3)
+        scene.add(obj)
+      }
+      else if (kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP3
+               || kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP4) {
         kart_funcs.set_velocity_to_max_double()
-      scene.add(obj)
+        camera.fov = 90
+        camera.updateProjectionMatrix()
+      }
     }
     keyboard[" "] = false
   }
@@ -146,7 +153,8 @@ function update_kart()
     } else {
       kart.children[kart.userData["powerup_active"]].visible = true
     }
-    if (kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP1)
+    if (kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP1
+        || kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP4)
       for (let i = 0; i < 3; i++)
         if (i < kart.userData["powerup_uses_left"])
           kart.children[kart.userData["powerup_active"]].children[i].visible = true
@@ -156,8 +164,11 @@ function update_kart()
   
   // update projectile animation
   kart.children[kart_funcs.kart_mesh_index.POWUP1].rotation.z += 0.05
+  kart.children[kart_funcs.kart_mesh_index.POWUP4].rotation.z += 0.05
   if (kart.children[kart_funcs.kart_mesh_index.POWUP1].rotation.z > Math.PI)
     kart.children[kart_funcs.kart_mesh_index.POWUP1].rotation.z = - Math.PI
+  if (kart.children[kart_funcs.kart_mesh_index.POWUP4].rotation.z > Math.PI)
+    kart.children[kart_funcs.kart_mesh_index.POWUP4].rotation.z = - Math.PI
     
   // small kart animation
   if (increase) {
@@ -176,6 +187,49 @@ function update_kart()
     kart.children[4].scale.z -= 0.002
     if (kart.children[0].scale.z <= 0.98)
       increase = true
+  }
+  
+  // god mode
+  if (keyboard["g"] == true)
+  {
+    if (kart.children[0].material.color.r >= 1.0) kart.children[0].material.color.r = 0
+    if (kart.children[0].material.color.g >= 1.0) kart.children[0].material.color.g = 0
+    if (kart.children[0].material.color.b >= 1.0) kart.children[0].material.color.b = 0
+    kart.children[0].material.color.r += 0.01
+    kart.children[0].material.color.g += 0.03
+    kart.children[0].material.color.b += 0.05
+    if (keyboard["1"] == true) {
+      kart.children[kart_funcs.kart_mesh_index.POWUP2].visible = false
+      kart.children[kart_funcs.kart_mesh_index.POWUP3].visible = false
+      kart.children[kart_funcs.kart_mesh_index.POWUP4].visible = false
+      kart.userData["powerup_active"] = kart_funcs.kart_mesh_index.POWUP1
+      kart.userData["powerup_uses_left"] = 3
+    }
+    else if (keyboard["2"] == true) {
+      kart.children[kart_funcs.kart_mesh_index.POWUP1].visible = false
+      kart.children[kart_funcs.kart_mesh_index.POWUP3].visible = false
+      kart.children[kart_funcs.kart_mesh_index.POWUP4].visible = false
+      kart.userData["powerup_active"] = kart_funcs.kart_mesh_index.POWUP2
+      kart.userData["powerup_uses_left"] = 1
+    }
+    else if (keyboard["3"] == true) {
+      kart.children[kart_funcs.kart_mesh_index.POWUP1].visible = false
+      kart.children[kart_funcs.kart_mesh_index.POWUP2].visible = false
+      kart.children[kart_funcs.kart_mesh_index.POWUP4].visible = false
+      kart.userData["powerup_active"] = kart_funcs.kart_mesh_index.POWUP3
+      kart.userData["powerup_uses_left"] = 1
+    }
+    else if (keyboard["4"] == true) {
+      kart.children[kart_funcs.kart_mesh_index.POWUP1].visible = false
+      kart.children[kart_funcs.kart_mesh_index.POWUP2].visible = false
+      kart.children[kart_funcs.kart_mesh_index.POWUP3].visible = false
+      kart.userData["powerup_active"] = kart_funcs.kart_mesh_index.POWUP4
+      kart.userData["powerup_uses_left"] = 3
+    }
+  } else {
+    kart.children[0].material.color.r = 1.0
+    kart.children[0].material.color.g = 0.0
+    kart.children[0].material.color.b = 0.0
   }
 }
 
@@ -220,6 +274,12 @@ function update_camera()
     camera.rotation.x = -Math.PI / 1.9
     camera.rotation.z = Math.PI
   }
+  
+  // reduce the fov to 75
+  if (camera.fov > 75) {
+    camera.fov -= 0.1
+    camera.updateProjectionMatrix()
+  }
 }
 
 // function to check the kart's collision
@@ -262,8 +322,9 @@ function update_powerup_boxes()
       if (scene.children[i].userData["collected"] != true && collision_condition) {
         scene.children[i].userData["collected"] = true
         if (kart.userData["powerup_active"] < kart_funcs.kart_mesh_index.POWUP1) {
-          kart.userData["powerup_active"] = kart_funcs.kart_mesh_index.POWUP1 + Math.floor(Math.random() * 2.999)
-          if (kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP1)
+          kart.userData["powerup_active"] = kart_funcs.kart_mesh_index.POWUP1 + Math.floor(Math.random() * 3.9999)
+          if (kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP1
+              || kart.userData["powerup_active"] == kart_funcs.kart_mesh_index.POWUP4)
             kart.userData["powerup_uses_left"] = 3
           else
             kart.userData["powerup_uses_left"] = 1

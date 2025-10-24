@@ -1042,6 +1042,7 @@ export function build_bomb_projectile()
   geometry.computeVertexNormals()
   material = new three.MeshStandardMaterial({color: 0x303030})
   mesh = new three.Mesh(geometry, material)
+  mesh.name = "bomb projectile"
   return mesh
 }
 
