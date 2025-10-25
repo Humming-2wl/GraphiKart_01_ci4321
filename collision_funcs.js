@@ -145,13 +145,6 @@ export function update_kart_given_collision(kart, obj)
     kart.position.x -= 2 * kart_funcs.vec_pos_inc.x;
     kart.position.y -= 2 * kart_funcs.vec_pos_inc.y;
     kart_funcs.set_velocity_to_opposite()
-    // make the kart rotate
-    return obj.userData["collision_type"]
   }
-  //~ // hide the object for a moment
-  //~ else if (obj.userData["collision_type"] == type.)
-  //~ {
-    //~ obj.visible = false
-  //~ }
-  return type.NONE
+  return obj.userData["collision_type"]
 }

@@ -91,8 +91,7 @@ function update_kart()
   } else kart_funcs.update_direction(kart_funcs.actions.IDLE);
   
   // update collision animation
-  if (collision_type == collision_funcs.type.DAMAGE_CAR
-      || collision_type == collision_funcs.type.PROJECTILE)
+  if (collision_type == collision_funcs.type.DAMAGE_CAR)
   {    
     if (spins3_angle <= 0) {
       spins3_angle = max_spin_angle
@@ -118,7 +117,7 @@ function update_kart()
   }
   
   // update powerup usage
-  if (keyboard[" "] == true) {
+  if (keyboard[" "] == true && collision_type != collision_funcs.type.DAMAGE_CAR) {
     kart.userData["powerup_uses_left"]--
     if (kart.userData["powerup_uses_left"] < 0) {
       kart.userData["powerup_uses_left"] = 0
@@ -290,14 +289,14 @@ function update_collision()
   let obj
   for (let i = 0; i < scene.children.length; i++)
     if (collision_funcs.is_kart_colliding_with_obj(kart, scene.children[i])) {
-      collision_type = collision_funcs.update_kart_given_collision(kart, scene.children[i])
+      if (collision_type != collision_funcs.type.DAMAGE_CAR)
+        collision_type = collision_funcs.update_kart_given_collision(kart, scene.children[i])
       obj = scene.children[i]
       break
     }
-  // destroy the projectile
-  //~ console.log(obj)
-  if (collision_type == collision_funcs.type.PROJECTILE)
-    scene.remove(obj)
+  //~ // destroy the projectile if it hits the car
+  //~ if (collision_type == collision_funcs.type.PROJECTILE)
+    //~ scene.remove(obj)
     
   // check if a projectile collides with anything else, if so, destroy it
   for (let i = 0; i < scene.children.length; i++)
